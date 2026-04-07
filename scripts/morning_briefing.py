@@ -258,10 +258,14 @@ def main():
     PLAN_FILE.write_text(plan_header + plan_content, encoding="utf-8")
     print(f"Plan updated: {PLAN_FILE}")
 
-    # 7. Log it
+    # 7. Log it + Caicai XP
     subprocess.run(
         ["bash", str(SCRIPTS_DIR / "log-to-brain.sh"), "system",
          f"Morning briefing generated. {len(open_items)} items carried forward."],
+        capture_output=True
+    )
+    subprocess.run(
+        ["python3", str(SCRIPTS_DIR / "caicai_engine.py"), "xp", "briefing_generated"],
         capture_output=True
     )
 

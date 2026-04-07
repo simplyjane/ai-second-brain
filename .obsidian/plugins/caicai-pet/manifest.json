@@ -1,0 +1,9 @@
+{
+  "id": "caicai-pet",
+  "name": "Caicai Pet",
+  "version": "1.0.0",
+  "minAppVersion": "1.0.0",
+  "description": "A black cat companion that lives in the corner of your vault. Click to hear miao~",
+  "author": "Jing",
+  "isDesktopOnly": true
+}

@@ -41,3 +41,5 @@ Do NOT promote:
 ```markdown
 - **[Category]:** [What was learned/decided] — [Why it matters] (promoted from [date])
 ```
+
+After promoting, run: `python3 scripts/caicai_engine.py xp memory_promoted`

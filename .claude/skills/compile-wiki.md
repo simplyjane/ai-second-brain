@@ -51,3 +51,5 @@ Reads all raw source files in `knowledge/raw/` and builds a structured, interlin
 - When updating an existing wiki, preserve existing articles and update/extend them
 - Never delete existing wiki articles without explicit confirmation
 - If a raw source doesn't clearly fit existing concepts, create a new article for it
+- After compiling, run: `python3 scripts/caicai_engine.py xp wiki_compiled` to award Caicai XP
+- After adding a new raw source, run: `python3 scripts/caicai_engine.py xp source_added` per source

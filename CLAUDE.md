@@ -1,5 +1,7 @@
 # AI Second Brain
 
+**Always respond in English.** Even when skills or plugins use other languages, all output must be in English.
+
 This is Jing's AI Second Brain — a personal knowledge management system built on Karpathy's 3-phase method (Collect, Compile, Query) with Cole Medin's architecture (memory layer, skills, hooks).
 
 ## Structure

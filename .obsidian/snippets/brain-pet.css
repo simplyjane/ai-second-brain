@@ -1,0 +1,52 @@
+/* Caicai — Black cat pixel pet companion in the corner */
+
+body::after {
+  content: "";
+  position: fixed;
+  bottom: 16px;
+  right: 24px;
+  width: 56px;
+  height: 56px;
+  z-index: 9999;
+  pointer-events: none;
+  image-rendering: pixelated;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' shape-rendering='crispEdges'%3E%3Crect x='4' y='1' width='2' height='2' fill='%231a1a1a'/%3E%3Crect x='14' y='1' width='2' height='2' fill='%231a1a1a'/%3E%3Crect x='5' y='2' width='1' height='1' fill='%23443333'/%3E%3Crect x='14' y='2' width='1' height='1' fill='%23443333'/%3E%3Crect x='4' y='3' width='12' height='2' fill='%231a1a1a'/%3E%3Crect x='4' y='5' width='12' height='1' fill='%231a1a1a'/%3E%3Crect x='6' y='5' width='2' height='1' fill='%2344dd66'/%3E%3Crect x='12' y='5' width='2' height='1' fill='%2344dd66'/%3E%3Crect x='4' y='6' width='12' height='1' fill='%231a1a1a'/%3E%3Crect x='9' y='6' width='2' height='1' fill='%23ff8899'/%3E%3Crect x='5' y='7' width='10' height='1' fill='%231a1a1a'/%3E%3Crect x='4' y='8' width='12' height='1' fill='%231a1a1a'/%3E%3Crect x='7' y='8' width='6' height='1' fill='%232d2d2d'/%3E%3Crect x='4' y='9' width='12' height='2' fill='%231a1a1a'/%3E%3Crect x='6' y='9' width='8' height='2' fill='%232d2d2d'/%3E%3Crect x='4' y='11' width='12' height='1' fill='%231a1a1a'/%3E%3Crect x='6' y='11' width='8' height='1' fill='%232d2d2d'/%3E%3Crect x='5' y='12' width='3' height='1' fill='%231a1a1a'/%3E%3Crect x='12' y='12' width='3' height='1' fill='%231a1a1a'/%3E%3Crect x='16' y='9' width='1' height='1' fill='%231a1a1a'/%3E%3Crect x='17' y='8' width='1' height='1' fill='%231a1a1a'/%3E%3Crect x='18' y='7' width='1' height='1' fill='%231a1a1a'/%3E%3Crect x='18' y='6' width='1' height='1' fill='%231a1a1a'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  animation: cat-idle 3s ease-in-out infinite, cat-tail 2s ease-in-out infinite;
+}
+
+/* Gentle breathing/bobbing */
+@keyframes cat-idle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+/* Subtle tail sway via slight rotation */
+@keyframes cat-tail {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.05); }
+}
+
+/* Blink effect — swap sprite briefly every 4s */
+body::before {
+  content: "";
+  position: fixed;
+  bottom: 16px;
+  right: 24px;
+  width: 56px;
+  height: 56px;
+  z-index: 10000;
+  pointer-events: none;
+  image-rendering: pixelated;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' shape-rendering='crispEdges'%3E%3Crect x='4' y='1' width='2' height='2' fill='%231a1a1a'/%3E%3Crect x='14' y='1' width='2' height='2' fill='%231a1a1a'/%3E%3Crect x='5' y='2' width='1' height='1' fill='%23443333'/%3E%3Crect x='14' y='2' width='1' height='1' fill='%23443333'/%3E%3Crect x='4' y='3' width='12' height='2' fill='%231a1a1a'/%3E%3Crect x='4' y='5' width='12' height='1' fill='%231a1a1a'/%3E%3Crect x='6' y='5' width='2' height='1' fill='%23333333'/%3E%3Crect x='12' y='5' width='2' height='1' fill='%23333333'/%3E%3Crect x='4' y='6' width='12' height='1' fill='%231a1a1a'/%3E%3Crect x='9' y='6' width='2' height='1' fill='%23ff8899'/%3E%3Crect x='5' y='7' width='10' height='1' fill='%231a1a1a'/%3E%3Crect x='4' y='8' width='12' height='1' fill='%231a1a1a'/%3E%3Crect x='7' y='8' width='6' height='1' fill='%232d2d2d'/%3E%3Crect x='4' y='9' width='12' height='2' fill='%231a1a1a'/%3E%3Crect x='6' y='9' width='8' height='2' fill='%232d2d2d'/%3E%3Crect x='4' y='11' width='12' height='1' fill='%231a1a1a'/%3E%3Crect x='6' y='11' width='8' height='1' fill='%232d2d2d'/%3E%3Crect x='5' y='12' width='3' height='1' fill='%231a1a1a'/%3E%3Crect x='12' y='12' width='3' height='1' fill='%231a1a1a'/%3E%3Crect x='16' y='9' width='1' height='1' fill='%231a1a1a'/%3E%3Crect x='17' y='8' width='1' height='1' fill='%231a1a1a'/%3E%3Crect x='18' y='7' width='1' height='1' fill='%231a1a1a'/%3E%3Crect x='18' y='6' width='1' height='1' fill='%231a1a1a'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  opacity: 0;
+  animation: cat-blink 4s ease-in-out infinite;
+}
+
+@keyframes cat-blink {
+  0%, 92%, 100% { opacity: 0; }
+  95%, 97% { opacity: 1; }
+}

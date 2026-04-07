@@ -36,4 +36,68 @@ if [ -f "$BRAIN_DIR/daily-logs/$TODAY.md" ]; then
     echo ""
 fi
 
+# Get Caicai's level for ASCII art
+LEVEL=$(python3 "$BRAIN_DIR/scripts/caicai_engine.py" status 2>/dev/null | head -1 | grep -o 'Level [0-9]' | grep -o '[0-9]')
+LEVEL=${LEVEL:-1}
+
+case $LEVEL in
+  1)
+    cat << 'ART'
+
+    /\_/\
+   ( o.o )  ~
+    > ^ <
+     |_|
+ART
+    ;;
+  2)
+    cat << 'ART'
+
+    /\_/\
+   ( o.o )
+    > ^ <
+   /|   |\
+  (_|   |_)
+ART
+    ;;
+  3)
+    cat << 'ART'
+
+    /\_/\
+   ( -.- )  ⌐■-■
+    > ^ <
+   /|   |\
+  (_|   |_)
+ART
+    ;;
+  4)
+    cat << 'ART'
+
+    /\_/\  📖
+   ( ^.^ )
+    > ^ <
+   /|   |\
+  (_|   |_)
+ART
+    ;;
+  5)
+    cat << 'ART'
+
+   ✨/\_/\✨
+    ( ◉.◉ )  🧠
+     > ^ <
+    /|   |\
+   (_|   |_)
+ART
+    ;;
+esac
+
+# Smart greeting from Caicai engine
+GREETING=$(python3 "$BRAIN_DIR/scripts/caicai_engine.py" greeting 2>/dev/null)
+if [ -n "$GREETING" ]; then
+    echo "$GREETING"
+else
+    echo "  Caicai: miao~ Brain online!"
+fi
+echo ""
 echo "=== BRAIN READY — $(date +%H:%M) ==="

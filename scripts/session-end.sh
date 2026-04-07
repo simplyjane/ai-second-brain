@@ -20,3 +20,6 @@ echo "## Session ended at $TIMESTAMP" >> "$LOG_FILE"
 echo "" >> "$LOG_FILE"
 echo "> Session context was saved. Review and promote key insights to memory.md." >> "$LOG_FILE"
 echo "" >> "$LOG_FILE"
+
+# Award Caicai XP
+python3 "$BRAIN_DIR/scripts/caicai_engine.py" xp session_end 2>/dev/null

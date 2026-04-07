@@ -45,3 +45,4 @@ Gaps: [what's missing, if anything]
 - If the brain doesn't have the answer, say so and offer to research it
 - Prefer recent information over old (daily logs > old wiki articles)
 - Cross-reference multiple sources when possible
+- After searching, run: `python3 scripts/caicai_engine.py xp search_run`

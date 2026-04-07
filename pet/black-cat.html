@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Caicai — Second Brain Cat</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #E8E5E0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    font-family: 'Courier New', monospace;
+    overflow: hidden;
+  }
+  canvas {
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    border-radius: 8px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  }
+  .info {
+    color: #999;
+    font-size: 11px;
+    margin-top: 10px;
+    letter-spacing: 1px;
+  }
+</style>
+</head>
+<body>
+<canvas id="c" width="720" height="720"></canvas>
+<div class="info" id="info">caicai — jing's second brain companion</div>
+
+<script>
+const cv = document.getElementById('c');
+const ctx = cv.getContext('2d');
+
+// ─── PALETTE ─────────────────────────────────────────────────
+const PALETTE = {
+  background: { bg: '#F9F7F4', dot: '#E0DDD8', page: '#E8E5E0' },
+  stars:      { dark: '#333333', mid: '#888888', light: '#BBBBBB' },
+  cat:        { body: '#1A1A1A', belly: '#2D2D2D', highlight: '#333333', eye: '#44DD66', pupil: '#000000', nose: '#FF8899', whisker: '#555555', inner_ear: '#443333' },
+  ui:         { white: '#FFFFFF', bubbleBorder: '#888888', textDark: '#333333' },
+  heart:      { pink: '#FF6B8A', light: '#FFB5C5' },
+  zzz:        { color: '#AAAAAA' }
+};
+
+// ─── PIXEL GRID ──────────────────────────────────────────────
+const PX = 20;
+const GW = cv.width / PX;
+const GH = cv.height / PX;
+
+function px(gx, gy, col) {
+  ctx.fillStyle = col;
+  ctx.fillRect(gx * PX, gy * PX, PX, PX);
+}
+
+// ─── BLACK CAT SPRITE ────────────────────────────────────────
+// Cat sitting (10×10) — compact cute black cat
+const CAT_SIT = {
+  width: 10, height: 10,
+  // 0=empty 1=body 2=ear_inner 3=eye_left 4=eye_right 5=nose 6=belly 7=highlight
+  data: [
+    [0,0,1,0,0,0,0,1,0,0],  // ears
+    [0,1,2,1,0,0,1,2,1,0],  // ear base
+    [0,1,1,1,1,1,1,1,1,0],  // head top
+    [0,1,3,1,1,1,4,1,1,0],  // eyes row
+    [0,1,1,1,5,1,1,1,1,0],  // nose row
+    [0,0,1,1,1,1,1,1,0,0],  // chin
+    [0,1,1,6,6,6,6,1,1,0],  // body upper
+    [0,1,6,6,6,6,6,6,1,0],  // body mid
+    [0,1,1,6,6,6,6,1,1,0],  // body lower
+    [0,0,1,1,0,0,1,1,0,0],  // paws
+  ]
+};
+
+// Tail pixels (relative to cat bottom-right)
+const TAIL_BASE = [
+  {dx: 4, dy: -2},
+  {dx: 5, dy: -2},
+  {dx: 5, dy: -3},
+  {dx: 6, dy: -3},
+  {dx: 6, dy: -4},
+];
+
+// ─── BACKGROUND ──────────────────────────────────────────────
+const STAR_POSITIONS = [
+  {x:4,y:3,type:'dark'},{x:14,y:2,type:'dark'},{x:27,y:1,type:'dark'},
+  {x:31,y:3,type:'mid'},{x:6,y:7,type:'dark'},{x:19,y:5,type:'light'},
+  {x:24,y:6,type:'mid'},{x:9,y:10,type:'dark'},{x:2,y:13,type:'dark'},
+  {x:33,y:8,type:'dark'},{x:29,y:12,type:'dark'},{x:7,y:16,type:'mid'},
+  {x:3,y:20,type:'dark'},{x:30,y:18,type:'mid'},{x:1,y:25,type:'dark'},
+  {x:33,y:24,type:'dark'},{x:5,y:30,type:'light'},{x:28,y:28,type:'mid'},
+  {x:15,y:9,type:'light'},{x:21,y:14,type:'mid'}
+];
+
+function drawBg() {
+  ctx.fillStyle = PALETTE.background.bg;
+  ctx.fillRect(0, 0, cv.width, cv.height);
+  for (let gy = 1; gy < GH; gy += 2) {
+    for (let gx = 1; gx < GW; gx += 2) {
+      ctx.fillStyle = PALETTE.background.dot;
+      ctx.beginPath();
+      ctx.arc(gx * PX + PX/2, gy * PX + PX/2, 2, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+}
+
+function drawStars(f) {
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  for (const s of STAR_POSITIONS) {
+    const twinkle = Math.sin(f * 0.08 + s.x * 0.5 + s.y * 0.3);
+    let col;
+    if (s.type === 'dark') col = twinkle > 0 ? PALETTE.stars.dark : PALETTE.stars.mid;
+    else if (s.type === 'mid') col = twinkle > 0.3 ? PALETTE.stars.mid : PALETTE.stars.light;
+    else col = twinkle > 0 ? PALETTE.stars.light : PALETTE.background.dot;
+    ctx.fillStyle = col;
+    const size = s.type === 'dark' ? 14 : 10;
+    ctx.font = `bold ${size}px serif`;
+    ctx.fillText('✳', s.x * PX + PX/2, s.y * PX + PX/2);
+  }
+}
+
+// ─── DRAW FUNCTIONS ──────────────────────────────────────────
+
+function drawCat(ox, oy, opts = {}) {
+  const eyeState = opts.eyes || 'open';      // open, blink, half, look_left, look_right
+  const tailPhase = opts.tailPhase || 0;      // 0-1 for tail sway
+  const stretch = opts.stretch || 0;          // 0-1 for stretch animation
+  const breathe = opts.breathe || 0;          // 0-1 for breathing
+
+  const colorMap = {
+    1: PALETTE.cat.body,
+    2: PALETTE.cat.inner_ear,
+    3: PALETTE.cat.eye,       // placeholder, drawn separately
+    4: PALETTE.cat.eye,       // placeholder, drawn separately
+    5: PALETTE.cat.nose,
+    6: PALETTE.cat.belly,
+    7: PALETTE.cat.highlight,
+  };
+
+  // Body stretch offset
+  const stretchOff = Math.round(stretch * 2);
+
+  // Draw body
+  for (let r = 0; r < CAT_SIT.height; r++) {
+    for (let c = 0; c < CAT_SIT.width; c++) {
+      const v = CAT_SIT.data[r][c];
+      if (v === 0) continue;
+      if (v === 3 || v === 4) {
+        // Draw body pixel behind eyes
+        px(ox + c, oy + r - stretchOff, PALETTE.cat.body);
+        continue;
+      }
+      px(ox + c, oy + r + (r >= 6 ? 0 : -stretchOff), colorMap[v]);
+    }
+  }
+
+  // Stretch fill gap
+  if (stretchOff > 0) {
+    for (let s = 0; s < stretchOff; s++) {
+      px(ox + 1, oy + 6 - s, PALETTE.cat.body);
+      px(ox + 2, oy + 6 - s, PALETTE.cat.body);
+      px(ox + 7, oy + 6 - s, PALETTE.cat.body);
+      px(ox + 8, oy + 6 - s, PALETTE.cat.body);
+      for (let c = 3; c <= 6; c++) px(ox + c, oy + 6 - s, PALETTE.cat.belly);
+    }
+  }
+
+  // Breathing — subtle body bob
+  const bOff = breathe > 0.5 ? -1 : 0;
+
+  // Eyes
+  const eyeY = oy + 3 - stretchOff + bOff;
+  if (eyeState === 'blink') {
+    // Closed eyes — horizontal line
+    px(ox + 2, eyeY, PALETTE.cat.highlight);
+    px(ox + 6, eyeY, PALETTE.cat.highlight);
+  } else if (eyeState === 'half') {
+    // Half-open — dimmer
+    px(ox + 2, eyeY, PALETTE.cat.highlight);
+    px(ox + 6, eyeY, PALETTE.cat.highlight);
+  } else {
+    // Open eyes with pupil
+    let ldx = 0, rdx = 0;
+    if (eyeState === 'look_left') { ldx = -1; rdx = -1; }
+    if (eyeState === 'look_right') { ldx = 1; rdx = 1; }
+
+    // Eye glow (green)
+    px(ox + 2 + ldx, eyeY, PALETTE.cat.eye);
+    px(ox + 6 + rdx, eyeY, PALETTE.cat.eye);
+
+    // Pupil dot
+    if (eyeState !== 'half') {
+      ctx.fillStyle = PALETTE.cat.pupil;
+      ctx.fillRect((ox + 2 + ldx) * PX + 7, eyeY * PX + 7, 6, 6);
+      ctx.fillRect((ox + 6 + rdx) * PX + 7, eyeY * PX + 7, 6, 6);
+    }
+  }
+
+  // Tail with sway
+  const tailSway = Math.sin(tailPhase * Math.PI * 2) * 1.5;
+  for (let i = 0; i < TAIL_BASE.length; i++) {
+    const t = TAIL_BASE[i];
+    const sway = Math.round(tailSway * (i / TAIL_BASE.length));
+    px(ox + t.dx + sway, oy + CAT_SIT.height + t.dy, PALETTE.cat.body);
+  }
+
+  // Whiskers (subtle)
+  const whY = oy + 4 - stretchOff;
+  ctx.strokeStyle = PALETTE.cat.whisker;
+  ctx.lineWidth = 1;
+  // Left whiskers
+  ctx.beginPath();
+  ctx.moveTo((ox) * PX, whY * PX + 10);
+  ctx.lineTo((ox - 1) * PX, whY * PX + 6);
+  ctx.moveTo((ox) * PX, whY * PX + 14);
+  ctx.lineTo((ox - 1) * PX, whY * PX + 18);
+  ctx.stroke();
+  // Right whiskers
+  ctx.beginPath();
+  ctx.moveTo((ox + 9) * PX + PX, whY * PX + 10);
+  ctx.lineTo((ox + 11) * PX, whY * PX + 6);
+  ctx.moveTo((ox + 9) * PX + PX, whY * PX + 14);
+  ctx.lineTo((ox + 11) * PX, whY * PX + 18);
+  ctx.stroke();
+}
+
+// Heart sprite
+const HEART = [
+  [1,0,1,0,0],
+  [1,1,1,1,0],
+  [0,1,1,1,0],
+  [0,0,1,0,0]
+];
+
+function drawHeart(hx, hy, col) {
+  for (let r = 0; r < HEART.length; r++) {
+    for (let c = 0; c < HEART[r].length; c++) {
+      if (HEART[r][c] === 1) px(hx + c - 1, hy + r, col);
+    }
+  }
+}
+
+function drawBubble(bx, by, text) {
+  const tw = text.length + 2;
+  for (let y = 0; y < 3; y++) {
+    for (let x = 0; x < tw; x++) {
+      const isEdge = (y === 0 || y === 2 || x === 0 || x === tw - 1);
+      if ((y === 0 || y === 2) && (x === 0 || x === tw - 1)) continue;
+      px(bx + x, by + y, isEdge ? PALETTE.stars.mid : PALETTE.ui.white);
+    }
+  }
+  px(bx + 1, by + 3, PALETTE.stars.mid);
+  ctx.fillStyle = PALETTE.stars.dark;
+  ctx.font = 'bold 12px Courier New';
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'top';
+  ctx.fillText(text, (bx + 1) * PX + 3, by * PX + 7);
+}
+
+// ─── ZZZ PARTICLES ───────────────────────────────────────────
+let zzzParticles = [];
+
+function addZzz(x, y) {
+  zzzParticles.push({
+    x, y,
+    vx: 0.05,
+    vy: -0.15,
+    life: 1.0,
+    size: 10 + Math.random() * 4
+  });
+}
+
+function tickZzz() {
+  for (let i = zzzParticles.length - 1; i >= 0; i--) {
+    const p = zzzParticles[i];
+    p.x += p.vx;
+    p.y += p.vy;
+    p.life -= 0.012;
+    if (p.life <= 0) { zzzParticles.splice(i, 1); continue; }
+    ctx.fillStyle = `rgba(150,150,150,${p.life * 0.7})`;
+    ctx.font = `bold ${Math.round(p.size * p.life + 6)}px Courier New`;
+    ctx.textAlign = 'center';
+    ctx.fillText('z', p.x * PX, p.y * PX);
+  }
+}
+
+// ─── PARTICLE SYSTEM ─────────────────────────────────────────
+let particles = [];
+
+function addParticle(x, y, col) {
+  particles.push({
+    x, y,
+    vx: (Math.random() - 0.5) * 0.8,
+    vy: -Math.random() * 0.8 - 0.3,
+    life: 1.0,
+    col
+  });
+}
+
+function tickParticles() {
+  for (let i = particles.length - 1; i >= 0; i--) {
+    const p = particles[i];
+    p.x += p.vx;
+    p.y += p.vy;
+    p.vy += 0.04;
+    p.life -= 0.02;
+    if (p.life <= 0) { particles.splice(i, 1); continue; }
+    if (p.life > 0.15) px(Math.round(p.x), Math.round(p.y), p.col);
+  }
+}
+
+// ─── EASING ──────────────────────────────────────────────────
+function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
+function easeInOut(t) { return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2, 3) / 2; }
+function lerp(a, b, t) { return a + (b - a) * t; }
+
+// ─── ANIMATION ───────────────────────────────────────────────
+const FPS = 30;
+const DUR = 8;  // 8 second loop for cozy idle
+const TOTAL = FPS * DUR;
+
+/*
+  Animation phases (8 seconds):
+  0.00 - 0.10  Enter: cat walks in from right       (0.8s)
+  0.10 - 0.30  Sit: settles down, looks around      (1.6s)
+  0.30 - 0.45  Blink: slow blink + breathe          (1.2s)
+  0.45 - 0.60  Stretch: big stretch with yawn        (1.2s)
+  0.60 - 0.75  Cozy: curls up, purr particles        (1.2s)
+  0.75 - 0.90  Nap: eyes half closed, zzz            (1.2s)
+  0.90 - 1.00  Wake: perks up, heart, walk off       (0.8s)
+*/
+
+function getPhase(t) {
+  if (t < 0.10) return { name: 'enter', local: t / 0.10 };
+  if (t < 0.30) return { name: 'sit', local: (t - 0.10) / 0.20 };
+  if (t < 0.45) return { name: 'blink', local: (t - 0.30) / 0.15 };
+  if (t < 0.60) return { name: 'stretch', local: (t - 0.45) / 0.15 };
+  if (t < 0.75) return { name: 'cozy', local: (t - 0.60) / 0.15 };
+  if (t < 0.90) return { name: 'nap', local: (t - 0.75) / 0.15 };
+  return { name: 'wake', local: (t - 0.90) / 0.10 };
+}
+
+function render(f) {
+  const t = f / TOTAL;
+  const phase = getPhase(t);
+  const p = phase.local;
+
+  drawBg();
+  drawStars(f);
+
+  const sitX = 13;
+  const sitY = 20;
+
+  let catX = sitX;
+  let catY = sitY;
+  let eyes = 'open';
+  let tailPhase = t * 2;  // continuous slow sway
+  let stretchAmt = 0;
+  let breatheAmt = 0;
+
+  switch (phase.name) {
+    case 'enter': {
+      // Walk in from right
+      catX = Math.round(lerp(37, sitX, easeOut(p)));
+      catY = sitY;
+      eyes = 'look_left';
+      tailPhase = t * 4;  // faster tail when walking
+      break;
+    }
+
+    case 'sit': {
+      catX = sitX;
+      catY = sitY;
+      // Look around
+      if (p < 0.3) eyes = 'look_left';
+      else if (p < 0.5) eyes = 'open';
+      else if (p < 0.7) eyes = 'look_right';
+      else eyes = 'open';
+      break;
+    }
+
+    case 'blink': {
+      catX = sitX;
+      catY = sitY;
+      // Slow blinks with breathing
+      breatheAmt = Math.sin(p * Math.PI * 2) * 0.5 + 0.5;
+      const blinkCycle = (p * 3) % 1;
+      if (blinkCycle > 0.85 && blinkCycle < 0.95) eyes = 'blink';
+      else eyes = 'open';
+      break;
+    }
+
+    case 'stretch': {
+      catX = sitX;
+      catY = sitY;
+      // Stretch up then relax
+      if (p < 0.4) {
+        stretchAmt = easeOut(p / 0.4);
+        eyes = 'blink';
+      } else if (p < 0.7) {
+        stretchAmt = 1;
+        eyes = 'half';
+      } else {
+        stretchAmt = 1 - easeOut((p - 0.7) / 0.3);
+        eyes = 'open';
+      }
+
+      // Yawn bubble at peak
+      if (p > 0.3 && p < 0.65) {
+        drawBubble(catX - 4, catY - 5, '~nyaa~');
+      }
+      break;
+    }
+
+    case 'cozy': {
+      catX = sitX;
+      catY = sitY;
+      eyes = 'half';
+      breatheAmt = Math.sin(p * Math.PI * 3) * 0.5 + 0.5;
+      tailPhase = t * 1.5;  // slower, cozier
+
+      // Purr particles
+      if (f % 8 === 0) {
+        addParticle(catX + 5 + Math.random() * 2, catY + 3, PALETTE.heart.light);
+      }
+      break;
+    }
+
+    case 'nap': {
+      catX = sitX;
+      catY = sitY;
+      eyes = 'blink';  // eyes closed
+      breatheAmt = Math.sin(p * Math.PI * 2) * 0.5 + 0.5;
+      tailPhase = t;  // very slow
+
+      // Zzz particles
+      if (f % 20 === 0) {
+        addZzz(catX + 8, catY - 2);
+      }
+      break;
+    }
+
+    case 'wake': {
+      // Perk up and walk off
+      if (p < 0.4) {
+        catX = sitX;
+        catY = sitY;
+        eyes = 'open';
+        // Alert! Ears up effect
+        if (p < 0.15) eyes = 'blink';
+        else eyes = 'open';
+
+        if (p > 0.2 && p < 0.4) {
+          drawBubble(catX - 2, catY - 4, '!!');
+        }
+      } else {
+        // Heart then walk off
+        catX = Math.round(lerp(sitX, -12, easeInOut((p - 0.4) / 0.6)));
+        catY = sitY;
+        eyes = 'look_left';
+        tailPhase = t * 4;
+
+        if (p > 0.3 && p < 0.7) {
+          drawHeart(sitX + 12, sitY - 3 + Math.round(Math.sin(p * 10) * 0.5), PALETTE.heart.pink);
+        }
+      }
+      break;
+    }
+  }
+
+  drawCat(catX, catY, {
+    eyes: eyes,
+    tailPhase: tailPhase,
+    stretch: stretchAmt,
+    breathe: breatheAmt
+  });
+
+  tickParticles();
+  tickZzz();
+}
+
+// ─── LOOP ────────────────────────────────────────────────────
+let startTime = null;
+
+function loop(ts) {
+  if (!startTime) startTime = ts;
+  const elapsed = (ts - startTime) / 1000;
+  const loopT = elapsed % DUR;
+  const frame = Math.floor(loopT * FPS);
+
+  if (loopT < 0.05) {
+    particles = [];
+    zzzParticles = [];
+  }
+
+  render(frame);
+
+  const phases = ['enter','sit','blink','stretch','cozy','nap','wake'];
+  const t = loopT / DUR;
+  const phase = getPhase(t);
+  document.getElementById('info').textContent =
+    `caicai — ${phase.name} — ${loopT.toFixed(1)}s / ${DUR}.0s  |  loop ${Math.floor(elapsed / DUR) + 1}`;
+
+  requestAnimationFrame(loop);
+}
+
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
