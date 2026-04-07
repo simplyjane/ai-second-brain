@@ -1,0 +1,10 @@
+{
+  "items": [
+    {"type": "file", "title": "Plan", "path": "memory/plan.md"},
+    {"type": "file", "title": "Memory", "path": "memory/memory.md"},
+    {"type": "file", "title": "Topics", "path": "memory/topics.md"},
+    {"type": "file", "title": "Soul", "path": "memory/soul.md"},
+    {"type": "file", "title": "User Profile", "path": "memory/user.md"},
+    {"type": "file", "title": "Wiki Index", "path": "knowledge/wiki/index.md"}
+  ]
+}

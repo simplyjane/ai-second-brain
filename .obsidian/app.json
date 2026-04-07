@@ -1,0 +1,15 @@
+{
+  "interfaceFontSize": 14,
+  "defaultViewMode": "preview",
+  "foldHeading": true,
+  "showLineNumber": false,
+  "strictLineBreaks": false,
+  "readableLineLength": true,
+  "autoConvertHtml": true,
+  "alwaysUpdateLinks": true,
+  "newFileLocation": "folder",
+  "newFileFolderPath": "knowledge/raw",
+  "attachmentFolderPath": "attachments",
+  "showFrontmatter": false,
+  "useMarkdownLinks": false
+}
