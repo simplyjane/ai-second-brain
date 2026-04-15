@@ -24,3 +24,4 @@ brain.db-wal
 
 # macOS
 .DS_Store
+*.canvas

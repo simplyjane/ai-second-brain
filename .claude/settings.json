@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash $HOME/Documents/JingAIJourney/ai-second-brain/scripts/session-start.sh"
+            "command": "bash scripts/session-start.sh"
           }
         ]
       }
@@ -17,7 +17,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash $HOME/Documents/JingAIJourney/ai-second-brain/scripts/session-end.sh"
+            "command": "bash scripts/session-end.sh"
           }
         ]
       }
@@ -28,7 +28,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash $HOME/Documents/JingAIJourney/ai-second-brain/scripts/pre-compact.sh"
+            "command": "bash scripts/pre-compact.sh"
           }
         ]
       }

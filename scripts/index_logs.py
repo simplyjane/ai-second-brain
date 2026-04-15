@@ -16,7 +16,7 @@ import glob
 from datetime import datetime
 from pathlib import Path
 
-BRAIN_DIR = Path.home() / "Documents" / "JingAIJourney" / "ai-second-brain"
+BRAIN_DIR = Path(__file__).resolve().parent.parent
 DB_PATH = BRAIN_DIR / "brain.db"
 LOGS_DIR = BRAIN_DIR / "daily-logs"
 WIKI_DIR = BRAIN_DIR / "knowledge" / "wiki"

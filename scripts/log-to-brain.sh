@@ -3,7 +3,7 @@
 # Usage: ./log-to-brain.sh "category" "content"
 # Example: ./log-to-brain.sh "decision" "Chose PostgreSQL over SQLite for production"
 
-BRAIN_DIR="$HOME/Documents/JingAIJourney/ai-second-brain"
+BRAIN_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 TODAY=$(date +%Y-%m-%d)
 LOG_FILE="$BRAIN_DIR/daily-logs/$TODAY.md"
 TIMESTAMP=$(date +%H:%M)

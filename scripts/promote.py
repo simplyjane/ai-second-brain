@@ -18,7 +18,7 @@ import os
 from datetime import datetime, timedelta
 from pathlib import Path
 
-BRAIN_DIR = Path.home() / "Documents" / "JingAIJourney" / "ai-second-brain"
+BRAIN_DIR = Path(__file__).resolve().parent.parent
 LOGS_DIR = BRAIN_DIR / "daily-logs"
 MEMORY_FILE = BRAIN_DIR / "memory" / "memory.md"
 USER_FILE = BRAIN_DIR / "memory" / "user.md"

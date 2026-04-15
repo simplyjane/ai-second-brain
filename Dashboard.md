@@ -31,6 +31,33 @@
 
 > Powered by launchd — runs on wake-up if Mac was asleep. Logs in `logs/`.
 
+## Caicai — Your Brain Companion
+
+Click the black cat in the bottom-right corner to pet her!
+
+**Levels** — Caicai grows as you use your brain:
+
+| Level | Name | XP | Look | How to earn |
+|---|---|---|---|---|
+| 1 | Kitten | 0 | Tiny cat, big head | Just getting started |
+| 2 | Cat | 50 | Full cat with tail | Add sources, compile wiki |
+| 3 | Smart Cat | 150 | Cat with glasses | Keep promoting memory |
+| 4 | Scholar Cat | 400 | Cat with glasses + book | Daily streaks, deep searches |
+| 5 | Brain Cat | 1000 | Cat with glasses + brain + sparkles | Master your second brain |
+
+**XP rewards:**
+- Add a source: +10 | Compile wiki: +25 | Promote memory: +15
+- Session start/end: +3/+5 | Search: +2 | Briefing: +8 | Pet click: +1
+
+**Smart behavior:**
+- Mood changes based on how recently you used the brain
+- Greetings change by time of day and level
+- Reminds you when memory needs promoting or wiki needs compiling
+- Celebrates milestones (streaks, source counts, level-ups)
+
+Check status anytime: `python3 scripts/caicai_engine.py status`
+Open animation: [[pet/black-cat.html]]
+
 ## How It Works
 
 ```

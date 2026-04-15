@@ -21,7 +21,7 @@ import glob
 from datetime import datetime, timedelta
 from pathlib import Path
 
-BRAIN_DIR = Path.home() / "Documents" / "JingAIJourney" / "ai-second-brain"
+BRAIN_DIR = Path(__file__).resolve().parent.parent
 STATE_FILE = BRAIN_DIR / "pet" / "caicai-state.json"
 
 # ─── LEVEL SYSTEM ─────────────────────────────────────────────

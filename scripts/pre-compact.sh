@@ -2,7 +2,7 @@
 # Pre-Compact Hook — saves context before memory compaction
 # Triggered when Claude Code conversation is about to be compacted (long conversation)
 
-BRAIN_DIR="$HOME/Documents/JingAIJourney/ai-second-brain"
+BRAIN_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 TODAY=$(date +%Y-%m-%d)
 LOG_FILE="$BRAIN_DIR/daily-logs/$TODAY.md"
 TIMESTAMP=$(date +%H:%M)

@@ -20,7 +20,7 @@ import re
 from datetime import datetime, timedelta
 from pathlib import Path
 
-BRAIN_DIR = Path.home() / "Documents" / "JingAIJourney" / "ai-second-brain"
+BRAIN_DIR = Path(__file__).resolve().parent.parent
 TOPICS_FILE = BRAIN_DIR / "memory" / "topics.md"
 PLAN_FILE = BRAIN_DIR / "memory" / "plan.md"
 MEMORY_FILE = BRAIN_DIR / "memory" / "memory.md"
@@ -71,7 +71,24 @@ def parse_topics():
     return queries
 
 
-def get_yesterday_open_items():
+def get_open_items_from_plan():
+    """Extract unfinished todos from current plan.md — these must NOT be lost."""
+    if not PLAN_FILE.exists():
+        return []
+
+    content = PLAN_FILE.read_text(encoding="utf-8")
+    open_items = []
+
+    for line in content.split("\n"):
+        stripped = line.strip()
+        # Keep unchecked todos (skip placeholder)
+        if stripped.startswith("- [ ]") and "(add your priorities" not in stripped:
+            open_items.append(stripped)
+
+    return open_items
+
+
+def get_open_items_from_log():
     """Extract unfinished todos from yesterday's daily log."""
     log_file = LOGS_DIR / f"{YESTERDAY}.md"
     if not log_file.exists():
@@ -87,7 +104,6 @@ def get_yesterday_open_items():
             open_items.append(stripped)
         # Find todo-category log entries
         if "**todo:**" in stripped.lower():
-            # Extract the todo content
             match = re.search(r'\*\*.*?todo.*?\*\*:?\s*(.*)', stripped, re.IGNORECASE)
             if match:
                 item = match.group(1).strip()
@@ -95,6 +111,21 @@ def get_yesterday_open_items():
                     open_items.append(f"- [ ] {item}")
 
     return open_items
+
+
+def get_yesterday_open_items():
+    """Merge open items from plan.md AND yesterday's daily log. Deduplicate."""
+    plan_items = get_open_items_from_plan()
+    log_items = get_open_items_from_log()
+
+    # Deduplicate — plan items take priority
+    seen = set(item.lower() for item in plan_items)
+    for item in log_items:
+        if item.lower() not in seen:
+            plan_items.append(item)
+            seen.add(item.lower())
+
+    return plan_items
 
 
 def get_yesterday_summary():

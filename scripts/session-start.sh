@@ -2,7 +2,7 @@
 # Session Start Hook — loads memory layer into Claude Code context
 # Triggered at the start of every Claude Code session
 
-BRAIN_DIR="$HOME/Documents/JingAIJourney/ai-second-brain"
+BRAIN_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 
 echo "=== AI SECOND BRAIN — CONTEXT LOADED ==="
 echo ""

@@ -43,7 +43,7 @@ logs/                — Cron job logs
 
 Daily maintenance at 11pm:
 ```
-0 23 * * * bash ~/Documents/JingAIJourney/ai-second-brain/scripts/daily-cron.sh >> ~/Documents/JingAIJourney/ai-second-brain/logs/cron.log 2>&1
+(Managed via launchd — see ~/Library/LaunchAgents/com.secondbrain.*.plist)
 ```
 
 ## Principles

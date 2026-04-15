@@ -253,6 +253,10 @@ module.exports = class CaicaiPetPlugin extends Plugin {
         opacity: 1;
         animation: caicai-heart-float 1.2s ease-out forwards;
       }
+      @keyframes caicai-pipa-bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+      }
       @keyframes caicai-heart-float {
         0% {
           transform: translate(0, 0) scale(0.5);
@@ -280,6 +284,10 @@ module.exports = class CaicaiPetPlugin extends Plugin {
 
     // Blink loop
     this.startBlinking();
+
+    // Pipa reminder every hour
+    this.pipaTimer = null;
+    this.startPipaReminder();
 
     // Meow texts
     // Level-based speech lines
@@ -398,6 +406,67 @@ module.exports = class CaicaiPetPlugin extends Plugin {
     }, 3000 + Math.random() * 2000);
   }
 
+  startPipaReminder() {
+    const pipaMessages = [
+      'Time to play Pipa! 🎵',
+      'Pipa break! Your fingers miss the strings~',
+      'miao~ Go practice Pipa!',
+      '1 hour already! Pipa time~ 🎶',
+      '*nudges* Pipa. Now. Please~',
+      'Your Pipa is waiting for you! 🎵',
+    ];
+
+    // Remind every 60 minutes
+    this.pipaTimer = setInterval(() => {
+      const text = pipaMessages[Math.floor(Math.random() * pipaMessages.length)];
+
+      // Show bubble
+      this.bubbleEl.textContent = text;
+      this.bubbleEl.style.display = 'block';
+      this.bubbleEl.addClass('show');
+
+      // Bounce the cat to get attention
+      this.petEl.style.animation = 'none';
+      this.petEl.offsetHeight;
+      this.petEl.style.animation = 'caicai-pipa-bounce 0.3s ease 4';
+      setTimeout(() => {
+        this.petEl.style.animation = 'caicai-bob 3s ease-in-out infinite';
+      }, 1200);
+
+      // Play a gentle chime
+      if (!this.audioCtx) this.audioCtx = new AudioContext();
+      this.playChime(this.audioCtx);
+
+      // Spawn music notes
+      this.spawnHearts();
+
+      // Hide after 5 seconds (longer than normal since it's a reminder)
+      setTimeout(() => {
+        this.bubbleEl.removeClass('show');
+        setTimeout(() => { this.bubbleEl.style.display = 'none'; }, 150);
+      }, 5000);
+
+    }, 60 * 60 * 1000); // 1 hour
+  }
+
+  playChime(audioCtx) {
+    const now = audioCtx.currentTime;
+    // Two gentle notes like a Pipa pluck
+    [440, 554].forEach((freq, i) => {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(freq, now + i * 0.15);
+      gain.gain.setValueAtTime(0, now + i * 0.15);
+      gain.gain.linearRampToValueAtTime(0.12, now + i * 0.15 + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.15 + 0.4);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(now + i * 0.15);
+      osc.stop(now + i * 0.15 + 0.5);
+    });
+  }
+
   async loadState() {
     const statePath = this.app.vault.adapter.basePath + '/pet/caicai-state.json';
     try {
@@ -443,6 +512,7 @@ module.exports = class CaicaiPetPlugin extends Plugin {
     this.heartsEl?.remove();
     this.styleEl?.remove();
     if (this.blinkTimer) clearInterval(this.blinkTimer);
+    if (this.pipaTimer) clearInterval(this.pipaTimer);
     if (this.audioCtx) this.audioCtx.close();
   }
 };

@@ -12,7 +12,7 @@ Searches across the entire knowledge base and memory to answer Jing's questions.
 1. **Check memory first** — Read `memory/memory.md` for relevant context
 2. **Search the SQLite index** — Run the search script for fast full-text search:
    ```bash
-   python3 ~/Documents/JingAIJourney/ai-second-brain/scripts/search_brain.py "query terms" --json
+   python3 scripts/search_brain.py "query terms" --json
    ```
    Filter by source if needed: `--source daily-log`, `--source wiki`, `--source memory`
    Filter by date: `--after 2026-04-01`

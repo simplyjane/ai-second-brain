@@ -15,7 +15,7 @@ Append to today's daily log at `daily-logs/YYYY-MM-DD.md`.
 
 Use the log-to-brain script:
 ```bash
-bash ~/Documents/JingAIJourney/ai-second-brain/scripts/log-to-brain.sh "<category>" "<content>"
+bash scripts/log-to-brain.sh "<category>" "<content>"
 ```
 
 Categories:
@@ -37,5 +37,5 @@ Categories:
 When summarizing a session (end of conversation or before compaction):
 
 ```bash
-bash ~/Documents/JingAIJourney/ai-second-brain/scripts/log-to-brain.sh "session-summary" "Worked on [topic]. Key outcomes: [1-3 bullet points]. Open questions: [anything unresolved]."
+bash scripts/log-to-brain.sh "session-summary" "Worked on [topic]. Key outcomes: [1-3 bullet points]. Open questions: [anything unresolved]."
 ```

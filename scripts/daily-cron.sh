@@ -9,7 +9,7 @@
 #   crontab -e
 #   (paste the line above)
 
-BRAIN_DIR="$HOME/Documents/JingAIJourney/ai-second-brain"
+BRAIN_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 SCRIPTS_DIR="$BRAIN_DIR/scripts"
 LOG_DIR="$BRAIN_DIR/logs"
 TIMESTAMP=$(date +"%Y-%m-%d %H:%M")

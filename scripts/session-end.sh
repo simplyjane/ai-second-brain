@@ -2,7 +2,7 @@
 # Session End Hook — saves conversation summary to daily log
 # Triggered when Claude Code session ends or conversation is stopped
 
-BRAIN_DIR="$HOME/Documents/JingAIJourney/ai-second-brain"
+BRAIN_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 TODAY=$(date +%Y-%m-%d)
 LOG_FILE="$BRAIN_DIR/daily-logs/$TODAY.md"
 TIMESTAMP=$(date +%H:%M)
